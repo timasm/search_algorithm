@@ -146,15 +146,15 @@ const GridField = () => {
         recusivetBreadthFirstSearch(nodes);
     }
     const recusivetBreadthFirstSearch = (nodes) => {
-        var elem = queue.shift();
+        var elem = queue.pop();
         for(let i = 1; i<5; i++) {
             if(nodes[elem][`${i}`] === undefined) continue;
             if(nodes[`${nodes[elem][`${i}`]}`].status === false) {
-                queue.push(nodes[elem][`${i}`]);
+                queue.unshift(nodes[elem][`${i}`]);
+                nodes[`${nodes[elem][`${i}`]}`].status = true;
+                setNodes(nodes);        
             }
         }
-        nodes[elem].status = true;
-        setNodes(nodes);
         setTimeout(() => {
             if(queue.length !== 0 && run) {
                 recusivetBreadthFirstSearch(nodes);
