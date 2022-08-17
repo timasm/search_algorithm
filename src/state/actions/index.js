@@ -9,6 +9,14 @@ export const setNodes = (nodes) => {
         });
     }
 }
+export const setQueue = (queue) => {
+    return(dispatch) => {
+        dispatch({
+            type: 'SET_QUEUE',
+            queue: queue
+        });
+    }
+}
 
 
 

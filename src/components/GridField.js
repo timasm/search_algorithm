@@ -1,18 +1,17 @@
 import {useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { $CombinedState, bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 import { actionCreators } from '../state/index';
 
 import '../scss/gridfield.scss';
 import TableCloumn from './TableCloumn';
 
+var __temp_queue = [];
 
 const GridField = () => {
 
     const [arr, setArr] = useState([]);
     const [nodesCalc, setNodesCalc] = useState(false);
-    const [isworking, setIsWorking] = useState(true);
-    const [knoten, setKnoten] = useState({});
 
 
     const state = useSelector((state) => state);
@@ -27,7 +26,6 @@ const GridField = () => {
             }
         }
         setNodes(nodes);
-        setKnoten(nodes);
     }
 
     const configNodes = () => {
@@ -115,46 +113,41 @@ const GridField = () => {
         return temp;
     }
 
-    function fibonacci(num) {
-        if(num < 2) {
-            return num;
+
+    const startDepthSearch = () => {
+        var nodes = state.nodes.nodes;
+        var start = '30-12';
+        __temp_queue.push(start);
+        recusiveDepthSearch(nodes);
+    }
+    const recusiveDepthSearch = (nodes) => {
+        var elem = __temp_queue.pop();
+        for(let i = 1; i<5; i++) {
+            if(nodes[elem][`${i}`] === undefined) continue;
+            if(nodes[`${nodes[elem][`${i}`]}`].status === false) {
+                __temp_queue.push(nodes[elem][`${i}`]);
+            }
         }
-        else {
-            return fibonacci(num-1) + fibonacci(num - 2);
-        }
+        nodes[elem].status = true;
+        setNodes(nodes);
+        setTimeout(() => {
+            if(__temp_queue.length !== 0) {
+                recusiveDepthSearch(nodes);
+            }
+        },200)
     }
 
-    const breadthFirstSearch = () => {
-        var nodes = knoten;
-        var queue = [];
-        var start = '30-12';
-        queue.push(start);
-        while(queue.length > 0) {
-            if(isworking) {
-                //setIsWorking(false);
-                var elem = queue.pop();
-                console.log(elem);
-                for(let i = 1; i<5; i++) {
-                    //console.log(nodes[elem]);
-                    //console.log('Hier', nodes[elem][`${i}`]);
-                    if(nodes[elem][`${i}`] === undefined) continue;
-                    if(nodes[`${nodes[elem][`${i}`]}`].status === false) {
-                        queue.push(nodes[elem][`${i}`]);
-                    }
-                }
-                //console.log(nodes[elem].status);
-                nodes[elem].status = true;
-                console.log(elem);
-                //document.getElementById(`${elem}`).classList.add('green');
-                //setNodes(nodes);
-                setKnoten(nodes);
-                console.log(fibonacci(40));
-            }
-
-            /*setTimeout(() => {
-                setIsWorking(true);
-            }, 500)*/
-        }
+    const startBreadthFirstSearch = () => {
+        /**
+         * Implementierung
+         */
+        return;
+    }
+    const recusivetBreadthFirstSearch = (nodes) => {
+        /**
+         * Implementierung
+         */
+        return;
     }
 
 
@@ -165,21 +158,25 @@ const GridField = () => {
             temp.push(i);
         }
         setArr(temp);
-    },[])
+    }, [])
 
     useEffect(() => {
         configNodes();
     }, [state.nodes.nodes])
 
 
+
   return (
     <>
-        <button onClick={breadthFirstSearch}>Starten</button>
+        <div className='btn'>
+            <button onClick={startDepthSearch}>Starten der Tiefensuche</button>
+            <button onClick={startBreadthFirstSearch}>Starten der Breitensuche</button>
+        </div>
         <div className='table-container'>
             { arr.map((el, index) => {
                 return (
                     <>
-                        <TableCloumn num={el} nodes={knoten} key={index}/>
+                        <TableCloumn num={el} key={index}/>
                     </>
                 );
             })}

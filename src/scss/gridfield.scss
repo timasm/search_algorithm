@@ -1,4 +1,21 @@
-
+.btn {
+    display: flex;
+    flex-direction: column;
+    padding-right: 24px;
+    button {
+        height: 32px;
+        border: 0;
+        border-bottom: 1px solid lightgray;
+        background-color: transparent;
+        margin-top: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        &:hover {
+            background-color: rgb(96, 96, 230);
+            color: aliceblue;
+        }
+    }
+}
 
 .table-container {
     width: 1000px;
