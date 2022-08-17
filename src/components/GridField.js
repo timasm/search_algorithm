@@ -6,7 +6,9 @@ import { actionCreators } from '../state/index';
 import '../scss/gridfield.scss';
 import TableCloumn from './TableCloumn';
 
-var __temp_queue = [];
+var stack = [];
+var queue = [];
+var run = false;
 
 const GridField = () => {
 
@@ -25,18 +27,16 @@ const GridField = () => {
                 nodes[`${i}-${j}`] = '';
             }
         }
-        setNodes(nodes);
+        configNodes(nodes);
     }
-
-    const configNodes = () => {
-        var temp = state.nodes.nodes;
-        if('{}' === JSON.stringify(temp) || nodesCalc) return;
+    const configNodes = (nodes) => {
+        if('{}' === JSON.stringify(nodes) || nodesCalc) return;
         setNodesCalc(true);
-        temp = configInnerNodes(temp);
-        temp = configCornerNodes(temp);
-        temp = configUpperLowerNodes(temp);
-        temp = configLeftRightNodes(temp);
-        setNodes(temp);
+        nodes = configInnerNodes(nodes);
+        nodes = configCornerNodes(nodes);
+        nodes = configUpperLowerNodes(nodes);
+        nodes = configLeftRightNodes(nodes);
+        setNodes(nodes);
     }
     const configInnerNodes = (temp) => {
         for(let i=1; i<60; i++) {
@@ -117,37 +117,67 @@ const GridField = () => {
     const startDepthSearch = () => {
         var nodes = state.nodes.nodes;
         var start = '30-12';
-        __temp_queue.push(start);
+        stack.push(start);
+        run = true;
         recusiveDepthSearch(nodes);
     }
     const recusiveDepthSearch = (nodes) => {
-        var elem = __temp_queue.pop();
+        var elem = stack.pop();
         for(let i = 1; i<5; i++) {
             if(nodes[elem][`${i}`] === undefined) continue;
             if(nodes[`${nodes[elem][`${i}`]}`].status === false) {
-                __temp_queue.push(nodes[elem][`${i}`]);
+                stack.push(nodes[elem][`${i}`]);
             }
         }
         nodes[elem].status = true;
         setNodes(nodes);
         setTimeout(() => {
-            if(__temp_queue.length !== 0) {
+            if(stack.length !== 0 && run) {
                 recusiveDepthSearch(nodes);
             }
-        },200)
+        }, 200)
     }
 
     const startBreadthFirstSearch = () => {
-        /**
-         * Implementierung
-         */
-        return;
+        var nodes = state.nodes.nodes;
+        var start = '30-12';
+        queue.push(start);
+        run = true;
+        recusivetBreadthFirstSearch(nodes);
     }
     const recusivetBreadthFirstSearch = (nodes) => {
-        /**
-         * Implementierung
-         */
-        return;
+        var elem = queue.shift();
+        for(let i = 1; i<5; i++) {
+            if(nodes[elem][`${i}`] === undefined) continue;
+            if(nodes[`${nodes[elem][`${i}`]}`].status === false) {
+                queue.push(nodes[elem][`${i}`]);
+            }
+        }
+        nodes[elem].status = true;
+        setNodes(nodes);
+        setTimeout(() => {
+            if(queue.length !== 0 && run) {
+                recusivetBreadthFirstSearch(nodes);
+            }
+        }, 50)
+    }
+
+    const stopAnimation = () => {
+        run = false;
+    }
+
+    const resetGridTable = () => {
+        var nodes = state.nodes.nodes;
+        run = false;
+        stack = [];
+        queue = [];
+        for(let i=1; i<60; i++) {
+            for(let j=1; j<24; j++) {
+                nodes[`${i}-${j}`].status = false;
+            }
+        }
+        run = true;
+        setNodes(nodes);
     }
 
 
@@ -158,26 +188,22 @@ const GridField = () => {
             temp.push(i);
         }
         setArr(temp);
-    }, [])
-
-    useEffect(() => {
-        configNodes();
-    }, [state.nodes.nodes])
-
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
 
   return (
     <>
         <div className='btn'>
             <button onClick={startDepthSearch}>Starten der Tiefensuche</button>
             <button onClick={startBreadthFirstSearch}>Starten der Breitensuche</button>
+            <button onClick={stopAnimation}>Stop</button>
+            <button onClick={resetGridTable}>Zurücksetzen</button>
         </div>
         <div className='table-container'>
             { arr.map((el, index) => {
+                console.log();
                 return (
-                    <>
-                        <TableCloumn num={el} key={index}/>
-                    </>
+                    <TableCloumn num={el} key={index}/> 
                 );
             })}
         </div>
