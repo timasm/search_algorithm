@@ -174,6 +174,7 @@ const GridField = () => {
         for(let i=1; i<60; i++) {
             for(let j=1; j<24; j++) {
                 nodes[`${i}-${j}`].status = false;
+                document.getElementById(`${i}-${j}`).classList.remove('gray');
             }
         }
         run = true;
