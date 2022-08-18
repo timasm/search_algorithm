@@ -5,3 +5,9 @@
     npm install
     npm init
     npm react react-thunk react-redux sass
+
+To Do's:
+- Labyrinth erstellen können
+- Gefundenen Pfad einzeichnen
+- Start & Zielpunkt setzen können
+- Algorithmenauswahl als drop down menu
