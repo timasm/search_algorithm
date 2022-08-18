@@ -86,7 +86,7 @@ const TableCloumn = ({ num }) => {
                                 }}
                                 className={ (() => {
                                         if(nodeStatus === 'visit') {
-                                            return 'green';
+                                            return 'visit';
                                         }
                                         else if(nodeStatus === 'startNode') {
                                             return 'start-node';
@@ -99,6 +99,9 @@ const TableCloumn = ({ num }) => {
                                         }
                                         else if(nodeStatus === 'founded') {
                                             return 'founded';
+                                        }
+                                        else if(nodeStatus === 'pathNode') {
+                                            return 'path'
                                         }
                                         else {
                                             return '';

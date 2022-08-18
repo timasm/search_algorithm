@@ -38,9 +38,9 @@
     }
 }
 
-.green {
+.visit {
     animation: .5s cellAnimate ease-in;
-    background: green;
+    background: rgb(255, 0, 208);
 }
 .gray {
     animation: .5s cellAnimate ease-in;
@@ -59,7 +59,7 @@
 
 
 .start-node {
-    background: rgb(255, 0, 208);
+    background: green;
 }
 .end-node {
     background: blue;
@@ -83,6 +83,29 @@
     }
     to {
         background: blue;
+        transform: scale(1);
+    }
+}
+
+.path {
+    background: greenyellow;
+    animation: 0.5s pathAnimation linear;
+
+}
+
+@keyframes pathAnimation {
+    from {
+        background: rgb(255, 0, 208);
+        transform: scale(.15);
+        border-radius: 50%;
+    }
+    90% {
+        background: rgb(0, 255, 123);
+        transform: scale(1.1);
+        border-radius: 50%;
+    }
+    to {
+        background: greenyellow;
         transform: scale(1);
     }
 }

@@ -49,7 +49,8 @@ const GridField = () => {
                     2: `${i+1}-${j}`,
                     3: `${i}-${j+1}`,
                     4: `${i-1}-${j}`,
-                    status: 'unvisit'
+                    status: 'unvisit',
+                    prev: '-'
                     }
                }
             }
@@ -60,22 +61,26 @@ const GridField = () => {
         temp['1-1'] = {
             1: '2-1',
             2: '1-2',
-            status: 'unvisit'
+            status: 'unvisit',
+            prev: '-'
         }
         temp['59-1'] = {
            1: '59-2',
            2: '58-1',
-           status: 'unvisit'
+           status: 'unvisit',
+           prev: '-'
            }
         temp['59-23'] = {
             1: '59-22',
             2: '58-23',
-            status: 'unvisit'
+            status: 'unvisit',
+            prev: '-'
         }
         temp['1-23'] = {
             1: '1-22',
             2: '2-23',
-            status: 'unvisit'
+            status: 'unvisit',
+            prev: '-'
         }
 
         return temp;
@@ -86,13 +91,15 @@ const GridField = () => {
                 1: `${i+1}-1`,
                 2: `${i}-2`,
                 3: `${i-1}-1`,
-                status: 'unvisit'
+                status: 'unvisit',
+                prev: '-'
             }
             temp[`${i}-23`] = {
                 1: `${i}-22`,
                 2: `${i+1}-23`,
                 3: `${i-1}-23`,
-                status: 'unvisit'
+                status: 'unvisit',
+                prev: '-'
             }
         }
         return temp;
@@ -103,13 +110,15 @@ const GridField = () => {
                 1: `1-${j-1}`,
                 2: `2-${j}`,
                 3: `1-${j+1}`,
-                status: 'unvisit'
+                status: 'unvisit',
+                prev: '-'
             }
             temp[`59-${j}`] = {
                 1: `59-${j-1}`,
                 2: `58-${j}`,
                 3: `59-${j+1}`,
-                status: 'unvisit'
+                status: 'unvisit',
+                prev: '-'
             }
         }
         return temp;
@@ -127,12 +136,15 @@ const GridField = () => {
         for(let i = 1; i<5; i++) {
             if(nodes[elem][`${i}`] === undefined) continue;
             if(nodes[`${nodes[elem][`${i}`]}`].status === 'endNode') {
+                nodes[`${nodes[elem][`${i}`]}`].prev = elem;
                 nodes[elem].status = 'visit';
                 nodes[`${nodes[elem][`${i}`]}`].status = 'founded';
                 setNodes(nodes);
+                drawPath(`${nodes[elem][`${i}`]}`);
                 return;
             }
             if(nodes[`${nodes[elem][`${i}`]}`].status === 'unvisit') {
+                nodes[`${nodes[elem][`${i}`]}`].prev = elem;
                 stack.push(nodes[elem][`${i}`]);
             }
         }
@@ -156,12 +168,15 @@ const GridField = () => {
         for(let i = 1; i<5; i++) {
             if(nodes[elem][`${i}`] === undefined) continue;
             if(nodes[`${nodes[elem][`${i}`]}`].status === 'endNode') {
+                nodes[`${nodes[elem][`${i}`]}`].prev = elem;
                 nodes[elem].status = 'visit';
                 nodes[`${nodes[elem][`${i}`]}`].status = 'founded';
                 setNodes(nodes);
+                drawPath(`${nodes[elem][`${i}`]}`);
                 return;
             }
             if(nodes[`${nodes[elem][`${i}`]}`].status === 'unvisit') {
+                nodes[`${nodes[elem][`${i}`]}`].prev = elem;
                 queue.unshift(nodes[elem][`${i}`]);
                 nodes[`${nodes[elem][`${i}`]}`].status = 'visit';
                 setNodes(nodes);        
@@ -173,6 +188,17 @@ const GridField = () => {
                 recusivetBreadthFirstSearch(nodes);
             }
         }, 50)
+    }
+
+    const drawPath = (goalNode) => {
+        var nodes = state.nodes.nodes
+        const previous = nodes[goalNode].prev;
+        nodes[previous].status = 'pathNode';
+        if(previous === state.nodes.clickedNodes.startNode) return
+        setNodes(nodes)
+        setTimeout(() => {
+            drawPath(previous)
+        }, 100)
     }
 
     const stopAnimation = () => {
