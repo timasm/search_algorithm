@@ -36,6 +36,8 @@ const GridField = () => {
         nodes = configCornerNodes(nodes);
         nodes = configUpperLowerNodes(nodes);
         nodes = configLeftRightNodes(nodes);
+        nodes[state.nodes.clickedNodes.startNode].status = 'startNode';
+        nodes[state.nodes.clickedNodes.endNode].status = 'endNode';
         setNodes(nodes);
     }
     const configInnerNodes = (temp) => {
@@ -47,7 +49,7 @@ const GridField = () => {
                     2: `${i+1}-${j}`,
                     3: `${i}-${j+1}`,
                     4: `${i-1}-${j}`,
-                    status: false
+                    status: 'unvisit'
                     }
                }
             }
@@ -58,22 +60,22 @@ const GridField = () => {
         temp['1-1'] = {
             1: '2-1',
             2: '1-2',
-            status: false
+            status: 'unvisit'
         }
         temp['59-1'] = {
            1: '59-2',
            2: '58-1',
-           status: false
+           status: 'unvisit'
            }
         temp['59-23'] = {
             1: '59-22',
             2: '58-23',
-            status: false
+            status: 'unvisit'
         }
         temp['1-23'] = {
             1: '1-22',
             2: '2-23',
-            status: false
+            status: 'unvisit'
         }
 
         return temp;
@@ -84,13 +86,13 @@ const GridField = () => {
                 1: `${i+1}-1`,
                 2: `${i}-2`,
                 3: `${i-1}-1`,
-                status: false
+                status: 'unvisit'
             }
             temp[`${i}-23`] = {
                 1: `${i}-22`,
                 2: `${i+1}-23`,
                 3: `${i-1}-23`,
-                status: false
+                status: 'unvisit'
             }
         }
         return temp;
@@ -101,13 +103,13 @@ const GridField = () => {
                 1: `1-${j-1}`,
                 2: `2-${j}`,
                 3: `1-${j+1}`,
-                status: false
+                status: 'unvisit'
             }
             temp[`59-${j}`] = {
                 1: `59-${j-1}`,
                 2: `58-${j}`,
                 3: `59-${j+1}`,
-                status: false
+                status: 'unvisit'
             }
         }
         return temp;
@@ -116,8 +118,7 @@ const GridField = () => {
 
     const startDepthSearch = () => {
         var nodes = state.nodes.nodes;
-        var start = '30-12';
-        stack.push(start);
+        stack.push(state.nodes.clickedNodes.startNode);
         run = true;
         recusiveDepthSearch(nodes);
     }
@@ -125,11 +126,17 @@ const GridField = () => {
         var elem = stack.pop();
         for(let i = 1; i<5; i++) {
             if(nodes[elem][`${i}`] === undefined) continue;
-            if(nodes[`${nodes[elem][`${i}`]}`].status === false) {
+            if(nodes[`${nodes[elem][`${i}`]}`].status === 'endNode') {
+                nodes[elem].status = 'visit';
+                nodes[`${nodes[elem][`${i}`]}`].status = 'founded';
+                setNodes(nodes);
+                return;
+            }
+            if(nodes[`${nodes[elem][`${i}`]}`].status === 'unvisit') {
                 stack.push(nodes[elem][`${i}`]);
             }
         }
-        nodes[elem].status = true;
+        if(nodes[elem].status !== 'startNode') nodes[elem].status = 'visit';
         setNodes(nodes);
         setTimeout(() => {
             if(stack.length !== 0 && run) {
@@ -140,8 +147,7 @@ const GridField = () => {
 
     const startBreadthFirstSearch = () => {
         var nodes = state.nodes.nodes;
-        var start = '30-12';
-        queue.push(start);
+        queue.push(state.nodes.clickedNodes.startNode);
         run = true;
         recusivetBreadthFirstSearch(nodes);
     }
@@ -149,12 +155,19 @@ const GridField = () => {
         var elem = queue.pop();
         for(let i = 1; i<5; i++) {
             if(nodes[elem][`${i}`] === undefined) continue;
-            if(nodes[`${nodes[elem][`${i}`]}`].status === false) {
+            if(nodes[`${nodes[elem][`${i}`]}`].status === 'endNode') {
+                nodes[elem].status = 'visit';
+                nodes[`${nodes[elem][`${i}`]}`].status = 'founded';
+                setNodes(nodes);
+                return;
+            }
+            if(nodes[`${nodes[elem][`${i}`]}`].status === 'unvisit') {
                 queue.unshift(nodes[elem][`${i}`]);
-                nodes[`${nodes[elem][`${i}`]}`].status = true;
+                nodes[`${nodes[elem][`${i}`]}`].status = 'visit';
                 setNodes(nodes);        
             }
         }
+        if(!nodes[elem].status === 'startNode') nodes[elem].status = 'visit';
         setTimeout(() => {
             if(queue.length !== 0 && run) {
                 recusivetBreadthFirstSearch(nodes);
@@ -173,11 +186,13 @@ const GridField = () => {
         queue = [];
         for(let i=1; i<60; i++) {
             for(let j=1; j<24; j++) {
-                nodes[`${i}-${j}`].status = false;
+                nodes[`${i}-${j}`].status = 'unvisit';
                 document.getElementById(`${i}-${j}`).classList.remove('gray');
             }
         }
         run = true;
+        nodes[state.nodes.clickedNodes.startNode].status = 'startNode';
+        nodes[state.nodes.clickedNodes.endNode].status = 'endNode';
         setNodes(nodes);
     }
 

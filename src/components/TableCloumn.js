@@ -1,5 +1,7 @@
-import React from 'react'
-import { useSelector} from 'react-redux';
+import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actionCreators } from '../state/index';
 
 
 import '../scss/gridfield.scss';
@@ -14,402 +16,99 @@ document.body.onmouseup = function() {
 
 const TableCloumn = ({ num }) => {
 
+    const [arr, setArr] = useState([]);
+
     const state = useSelector((state) => state);
+    const dispatch = useDispatch();
+    const { setNodes, setClickedNodes } = bindActionCreators(actionCreators, dispatch);
+
+    const fillArr = () => {
+        var temp = [];
+        for(let i=1; i<24; i++) {
+            temp.push(i);
+        }
+        setArr(temp);
+    }
+
+    useEffect(() => {
+        fillArr();
+    },[])
+
   return (
     <>
         <table>
             <tbody>
-                <tr>
-                    <td id={`${num}-1`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-1`).classList.add('gray');
-                            state.nodes.nodes[`${num}-1`].status = undefined;
-                        }}}
-                        onClick={() => {
-                            document.getElementById(`${num}-1`).classList.add('gray');
-                            state.nodes.nodes[`${num}-1`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-1`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-2`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-2`).classList.add('gray');
-                            state.nodes.nodes[`${num}-2`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-2`).classList.add('gray');
-                            state.nodes.nodes[`${num}-2`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-2`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-3`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-3`).classList.add('gray');
-                            state.nodes.nodes[`${num}-3`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-3`).classList.add('gray');
-                            state.nodes.nodes[`${num}-3`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-3`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-4`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-4`).classList.add('gray');
-                            state.nodes.nodes[`${num}-4`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-4`).classList.add('gray');
-                            state.nodes.nodes[`${num}-4`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-4`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-5`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-5`).classList.add('gray');
-                            state.nodes.nodes[`${num}-5`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-5`).classList.add('gray');
-                            state.nodes.nodes[`${num}-5`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-5`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-6`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-6`).classList.add('gray');
-                            state.nodes.nodes[`${num}-6`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-6`).classList.add('gray');
-                            state.nodes.nodes[`${num}-6`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-6`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-7`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-7`).classList.add('gray');
-                            state.nodes.nodes[`${num}-7`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-7`).classList.add('gray');
-                            state.nodes.nodes[`${num}-7`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-7`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-8`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-8`).classList.add('gray');
-                            state.nodes.nodes[`${num}-8`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-8`).classList.add('gray');
-                            state.nodes.nodes[`${num}-8`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-8`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-9`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-9`).classList.add('gray');
-                            state.nodes.nodes[`${num}-9`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-9`).classList.add('gray');
-                            state.nodes.nodes[`${num}-9`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-9`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-10`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-10`).classList.add('gray');
-                            state.nodes.nodes[`${num}-10`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-10`).classList.add('gray');
-                            state.nodes.nodes[`${num}-10`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-10`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-11`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-11`).classList.add('gray');
-                            state.nodes.nodes[`${num}-11`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-11`).classList.add('gray');
-                            state.nodes.nodes[`${num}-11`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-11`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-12`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-12`).classList.add('gray');
-                            state.nodes.nodes[`${num}-12`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-12`).classList.add('gray');
-                            state.nodes.nodes[`${num}-12`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-12`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-13`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-13`).classList.add('gray');
-                            state.nodes.nodes[`${num}-13`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-13`).classList.add('gray');
-                            state.nodes.nodes[`${num}-13`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-13`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-14`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-14`).classList.add('gray');
-                            state.nodes.nodes[`${num}-14`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-14`).classList.add('gray');
-                            state.nodes.nodes[`${num}-14`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-14`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-15`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-15`).classList.add('gray');
-                            state.nodes.nodes[`${num}-15`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-15`).classList.add('gray');
-                            state.nodes.nodes[`${num}-15`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-15`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-16`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-16`).classList.add('gray');
-                            state.nodes.nodes[`${num}-16`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-16`).classList.add('gray');
-                            state.nodes.nodes[`${num}-16`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-16`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-17`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-17`).classList.add('gray');
-                            state.nodes.nodes[`${num}-17`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-17`).classList.add('gray');
-                            state.nodes.nodes[`${num}-17`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-17`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-18`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-18`).classList.add('gray');
-                            state.nodes.nodes[`${num}-18`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-18`).classList.add('gray');
-                            state.nodes.nodes[`${num}-18`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-18`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-19`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-19`).classList.add('gray');
-                            state.nodes.nodes[`${num}-19`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-19`).classList.add('gray');
-                            state.nodes.nodes[`${num}-19`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-19`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-20`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-20`).classList.add('gray');
-                            state.nodes.nodes[`${num}-20`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-20`).classList.add('gray');
-                            state.nodes.nodes[`${num}-20`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-20`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-21`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-21`).classList.add('gray');
-                            state.nodes.nodes[`${num}-21`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-21`).classList.add('gray');
-                            state.nodes.nodes[`${num}-21`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-21`].status ? 'green'
-                                    : ''
-                        }
-                    ></td> 
-                </tr>
-                <tr>
-                    <td id={`${num}-22`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-22`).classList.add('gray');
-                            state.nodes.nodes[`${num}-22`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-22`).classList.add('gray');
-                            state.nodes.nodes[`${num}-22`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-22`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
-                <tr>
-                    <td id={`${num}-23`} 
-                        onMouseEnter={() => {
-                            console.log("enter")
-                            if(mouseDown === 1) {
-                            document.getElementById(`${num}-23`).classList.add('gray');
-                            state.nodes.nodes[`${num}-23`].status = undefined;
-                        }}} 
-                        onClick={() => {
-                            document.getElementById(`${num}-23`).classList.add('gray');
-                            state.nodes.nodes[`${num}-23`].status = undefined;
-                        }}
-                        className={ state.nodes.nodes[`${num}-23`].status ? 'green'
-                                    : ''
-                        }
-                    ></td>
-                </tr>
+                {arr.map((el, index) => {
+                    const nodeStatus = state.nodes.nodes[`${num}-${el}`].status;
+                    const nodes = state.nodes.nodes;
+                    var clickedNodes = state.nodes.clickedNodes;
+                    return (
+                        <tr key={index}>
+                            <td id={`${num}-${el}`} 
+                                onMouseEnter={() => {
+                                    if(mouseDown === 1) {
+                                        nodes[`${num}-${el}`].status = undefined;
+                                        setNodes(nodes);
+                                }}}
+                                onClick={() => {
+                                    if(clickedNodes.start === true && `${num}-${el}` !== clickedNodes.endNode) {
+                                        nodes[`${num}-${el}`].status = 'startNode';
+                                        nodes[clickedNodes.startNode].status = 'unvisit';
+                                        clickedNodes.start = !clickedNodes.start;
+                                        clickedNodes.startNode = `${num}-${el}`;
+                                        setClickedNodes(clickedNodes);
+                                        setNodes(nodes);
+                                    }
+                                    else if(clickedNodes.end === true && `${num}-${el}` !== clickedNodes.startNode) {
+                                        nodes[`${num}-${el}`].status = 'endNode';
+                                        nodes[clickedNodes.endNode].status = 'unvisit';
+                                        clickedNodes.end = !clickedNodes.end;
+                                        clickedNodes.endNode = `${num}-${el}`;
+                                        setClickedNodes(clickedNodes);
+                                        setNodes(nodes);
+                                    }
+                                    else if(nodeStatus === 'startNode') {
+                                        nodes[`${num}-${el}`].status = '';
+                                        clickedNodes.start = !clickedNodes.start;
+                                        setClickedNodes(clickedNodes);
+                                        setNodes(nodes);
+                                    }
+                                    else if(nodeStatus === 'endNode') {
+                                        nodes[`${num}-${el}`].status = '';
+                                        clickedNodes.end = !clickedNodes.end;
+                                        setClickedNodes(clickedNodes);
+                                        setNodes(nodes);
+                                    }
+                                    else {
+                                        nodes[`${num}-${el}`].status = undefined;
+                                        setNodes(nodes);
+                                    }
+                                }}
+                                className={ (() => {
+                                        if(nodeStatus === 'visit') {
+                                            return 'green';
+                                        }
+                                        else if(nodeStatus === 'startNode') {
+                                            return 'start-node';
+                                        }
+                                        else if(nodeStatus === 'endNode') {
+                                            return 'end-node';
+                                        }
+                                        else if(nodeStatus === undefined) {
+                                            return 'gray';
+                                        }
+                                        else if(nodeStatus === 'founded') {
+                                            return 'founded';
+                                        }
+                                        else {
+                                            return '';
+                                        }
+                                    })()
+                                }
+                            ></td>
+                        </tr>
+                    );
+                })}
             </tbody>
         </table>
     </>

@@ -42,12 +42,10 @@
     animation: .5s cellAnimate ease-in;
     background: green;
 }
-
 .gray {
     animation: .5s cellAnimate ease-in;
     background: gray !important;
 }
-
 @keyframes cellAnimate {
     from {
         transform: scale(0.2);
@@ -56,5 +54,35 @@
     to {
         transform: scale(1);
         border-radius: 0px;
+    }
+}
+
+
+.start-node {
+    background: rgb(255, 0, 208);
+}
+.end-node {
+    background: blue;
+}
+
+.founded {
+    background: blue;
+    animation: 1s goalAnimation linear;
+}
+
+@keyframes goalAnimation {
+    from {
+        background: yellow;
+        transform: scale(.15);
+        border-radius: 50%;
+    }
+    90% {
+        background: rgb(85, 0, 255);
+        transform: scale(1.35);
+        border-radius: 50%;
+    }
+    to {
+        background: blue;
+        transform: scale(1);
     }
 }

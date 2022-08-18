@@ -9,11 +9,11 @@ export const setNodes = (nodes) => {
         });
     }
 }
-export const setQueue = (queue) => {
+export const setClickedNodes = (clickedNodes) => {
     return(dispatch) => {
         dispatch({
-            type: 'SET_QUEUE',
-            queue: queue
+            type: 'ClICKED_NODES',
+            clickedNodes: clickedNodes
         });
     }
 }

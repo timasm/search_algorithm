@@ -1,21 +1,26 @@
 const SET_NODES = 'SET_NODES';
-const SET_QUEUE = 'SET_QUEUE'
+const ClICKED_NODES = 'ClICKED_NODES'
 
 
 const nodes = {}
-const queue = [];
+const clickedNodes = {
+    start: false,
+    end: false,
+    startNode: '40-12',
+    endNode: '12-12'
+};
 
-const reducer = (state = { nodes, queue }, action) => {
+const reducer = (state = { nodes, clickedNodes }, action) => {
     switch (action.type) {
         case SET_NODES:
             return {
                 ...state,
                 nodes: action.nodes,
             }
-        case SET_QUEUE:
+        case ClICKED_NODES:
            return {
                ...state,
-               queue: action.queue,
+               clickedNodes: action.clickedNodes,
            }
         default: 
             return state;
