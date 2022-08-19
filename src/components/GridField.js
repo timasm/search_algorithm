@@ -16,6 +16,7 @@ const GridField = () => {
 
     const [arr, setArr] = useState([]);
     const [nodesCalc, setNodesCalc] = useState(false);
+    const [disable, setDisabel] = useState(false);
 
 
     const state = useSelector((state) => state);
@@ -128,6 +129,7 @@ const GridField = () => {
 
 
     const startDepthSearch = () => {
+        setDisabel(true);
         var nodes = state.nodes.nodes;
         stack.push(state.nodes.clickedNodes.startNode);
         run = true;
@@ -163,6 +165,7 @@ const GridField = () => {
      * Breitensuche
      */
     const startBreadthFirstSearch = () => {
+        setDisabel(true);
         var nodes = state.nodes.nodes;
         queue.push(state.nodes.clickedNodes.startNode);
         run = true;
@@ -239,6 +242,17 @@ const GridField = () => {
         }
         setNodes(nodes);
     }
+    const dfzMaze = () => {
+        var nodes = state.nodes.nodes;
+        setClickedNodes({
+            start: false,
+            end: false,
+            startNode: '41-11',
+            endNode: '19-11'
+        });
+        nodes['41-11'].status = 'startNode';
+        nodes['19-11'].status = 'endNode';
+    }
     const dfsMazeDraw = (node) => {
         var nodes = state.nodes.nodes;
         nodes[node].status = 'visit';
@@ -248,8 +262,10 @@ const GridField = () => {
             else return true;
         });
         if(lastElem && dfsQueue.length === 1) {
-            console.log('Bis hier')
+            dfzMaze();
+            setDisabel(false);
             dfsMazeConvertVisitToNothing();
+            lastElem = false;
             return;
         }
         if(filteredNeighbors.length === 0) {
@@ -282,16 +298,11 @@ const GridField = () => {
         setNodes(nodes);
         setTimeout(() => {
             dfsMazeDraw(dfsQueue.pop());
-        }, 50);
+        }, 20);
     }
     const dfsMaze = () => {
+        setDisabel(true);
         dfsMazeInitialization();
-        setClickedNodes({
-            start: true,
-            end: true,
-            startNode: state.nodes.clickedNodes.startNode,
-            endNode: state.nodes.clickedNodes.endNode
-        });
         const start = '1-1';
         dfsQueue.push(start);
         dfsMazeDraw(start);
@@ -319,15 +330,25 @@ const GridField = () => {
         else return [`${x-2}-${y}`, `${x+2}-${y}`, `${x}-${y-2}`, `${x}-${y+2}`];
     }
 
+    
     const stopAnimation = () => {
         run = false;
     }
 
     const resetGridTable = () => {
-        var nodes = state.nodes.nodes;
-        run = false;
+        setDisabel(false);
+        stopAnimation();
+        dfsQueue = [];
         stack = [];
         queue = [];
+        lastElem = false;
+        setClickedNodes({
+            start: false,
+            end: false,
+            startNode: '40-12',
+            endNode: '12-12'
+        });
+        var nodes = state.nodes.nodes;
         for(let i=1; i<60; i++) {
             for(let j=1; j<24; j++) {
                 nodes[`${i}-${j}`].status = 'unvisit';
@@ -354,11 +375,10 @@ const GridField = () => {
   return (
     <>
         <div className='btn'>
-            <button onClick={startDepthSearch}>Starten der Tiefensuche</button>
-            <button onClick={startBreadthFirstSearch}>Starten der Breitensuche</button>
-            <button onClick={stopAnimation}>Stop</button>
+            <button onClick={startDepthSearch} disabled={disable}>Starten der Tiefensuche</button>
+            <button onClick={startBreadthFirstSearch} disabled={disable}>Starten der Breitensuche</button>
+            <button onClick={dfsMaze} disabled={disable}>Labyrinth erstellen</button>
             <button onClick={resetGridTable}>Zurücksetzen</button>
-            <button onClick={dfsMaze}>Labyrinth</button>
         </div>
         <div className='table-container'>
             { arr.map((el, index) => {
