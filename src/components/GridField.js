@@ -225,15 +225,17 @@ const GridField = () => {
         const neighbors = checkNeighbors(node);
         console.log(neighbors);
         const filteredNeighbors = neighbors.filter((el) => {
-            if(nodes[el].status === 'visit') return false;
+            if(nodes[el].status !== 'unvisit') return false;
             else return true;
         });
+        console.log(filteredNeighbors);
+        console.log(dfsQueue)
         if(filteredNeighbors.length === 0) {
             dfsMazeDraw(dfsQueue.pop());
             return;
         }
 
-        const randomChoice = neighbors[Math.floor(Math.random() * neighbors.length)];
+        const randomChoice = filteredNeighbors[Math.floor(Math.random() * filteredNeighbors.length)];
 
         if(parseInt(randomChoice.split('-')[0]) === parseInt(node.split('-')[0])) {
             if(parseInt(randomChoice.split('-')[1]) > parseInt(node.split('-')[1])) {
@@ -251,11 +253,15 @@ const GridField = () => {
                 nodes[`${parseInt(node.split('-')[0]) - 1}-${parseInt(node.split('-')[1])}`].status = 'visit';
             }
         }
+        nodes[randomChoice].status = 'visit'
         dfsQueue.push(randomChoice);
+        //Wir müssen node wieder hinzufügen, node hat ja evtl. vier Nachbarn aber wir haben ihn bisher immer nachdem wir einen
+        //explored hatten verworfen indem wir ihn nicht mehr der Queue für mögliche Backtracks hinzugefügt haben
+        dfsQueue.push(node);
         setNodes(nodes);
         setTimeout(() => {
             dfsMazeDraw(dfsQueue.pop());
-        }, 200);
+        }, 50);
 
     }
 
