@@ -8,6 +8,7 @@ import TableCloumn from './TableCloumn';
 
 var stack = [];
 var queue = [];
+var dfsQueue = [];
 var run = false;
 
 const GridField = () => {
@@ -191,14 +192,104 @@ const GridField = () => {
     }
 
     const drawPath = (goalNode) => {
-        var nodes = state.nodes.nodes
+        var nodes = state.nodes.nodes;
         const previous = nodes[goalNode].prev;
         nodes[previous].status = 'pathNode';
-        if(previous === state.nodes.clickedNodes.startNode) return
-        setNodes(nodes)
+        if(previous === state.nodes.clickedNodes.startNode) return;
+        setNodes(nodes);
         setTimeout(() => {
-            drawPath(previous)
-        }, 100)
+            drawPath(previous);
+        }, 100);
+    }
+
+    const dfsMazeInitialization = () => {
+        var nodes = state.nodes.nodes;
+        for(let i=1; i<60; i++) {
+            for(let j=1; j<24; j++) {
+                if(j % 2 === 0) {
+                    nodes[`${i}-${j}`].status = undefined;
+                }
+                if(i % 2 === 0) {
+                    nodes[`${i}-${j}`].status = undefined;
+                }
+            }
+        }
+        setNodes(nodes);
+    }
+
+    const dfsMazeDraw = (node) => {
+        if(dfsQueue.length === 0) return;
+        var nodes = state.nodes.nodes;
+
+        nodes[node].status = 'visit';
+        const neighbors = checkNeighbors(node);
+        console.log(neighbors);
+        const filteredNeighbors = neighbors.filter((el) => {
+            if(nodes[el].status === 'visit') return false;
+            else return true;
+        });
+        if(filteredNeighbors.length === 0) {
+            dfsMazeDraw(dfsQueue.pop());
+            return;
+        }
+
+        const randomChoice = neighbors[Math.floor(Math.random() * neighbors.length)];
+
+        if(parseInt(randomChoice.split('-')[0]) === parseInt(node.split('-')[0])) {
+            if(parseInt(randomChoice.split('-')[1]) > parseInt(node.split('-')[1])) {
+                nodes[`${parseInt(node.split('-')[0])}-${parseInt(node.split('-')[1]) + 1}`].status = 'visit';
+            }
+            else {
+                nodes[`${parseInt(node.split('-')[0])}-${parseInt(node.split('-')[1]) - 1}`].status = 'visit';
+            }
+        }
+        else {
+            if(parseInt(randomChoice.split('-')[0]) > parseInt(node.split('-')[0])) {
+                nodes[`${parseInt(node.split('-')[0]) + 1}-${parseInt(node.split('-')[1])}`].status = 'visit';
+            }
+            else {
+                nodes[`${parseInt(node.split('-')[0]) - 1}-${parseInt(node.split('-')[1])}`].status = 'visit';
+            }
+        }
+        dfsQueue.push(randomChoice);
+        setNodes(nodes);
+        setTimeout(() => {
+            dfsMazeDraw(dfsQueue.pop());
+        }, 200);
+
+    }
+
+    const dfsMaze = () => {
+        dfsMazeInitialization();
+        const start = '1-1';
+        dfsQueue.push(start);
+        dfsMazeDraw(start);
+    }
+
+    const checkNeighbors = (elem) => {   
+        var x = parseInt(elem.split('-')[0]);
+        var y = parseInt(elem.split('-')[1]);
+        
+        //top left corner
+        if(x === 1 && y === 1) return [`3-1`, `1-3`];
+        //top right corner
+        else if(x === 59 && y === 1) return [`57-1`, `59-3`];
+        //bottom left corner
+        else if(x === 1 && y === 23) return [`1-21`, `3-23`];
+        //bottom right corner
+        else if(x === 59 && y === 23) return [`57-23`, `59-21`];
+
+        //left side
+        else if (x === 1) return [`${x}-${y-2}`, `${x}-${y+2}`, `${x+2}-${y}`];
+        //right side
+        else if (x === 59) return [`${x}-${y-2}`, `${x}-${y+2}`, `${x-2}-${y}`];
+        //top side
+        else if (y === 1) return [`${x-2}-${y}`, `${x+2}-${y}`, `${x}-${y+2}`];
+        //bottom side
+        else if (y === 23) return [`${x-2}-${y}`, `${x+2}-${y}`, `${x}-${y-2}`];
+
+        //mid section
+        else return [`${x-2}-${y}`, `${x+2}-${y}`, `${x}-${y-2}`, `${x}-${y+2}`];
     }
 
     const stopAnimation = () => {
@@ -240,6 +331,7 @@ const GridField = () => {
             <button onClick={startBreadthFirstSearch}>Starten der Breitensuche</button>
             <button onClick={stopAnimation}>Stop</button>
             <button onClick={resetGridTable}>Zurücksetzen</button>
+            <button onClick={dfsMaze}>Labyrinth</button>
         </div>
         <div className='table-container'>
             { arr.map((el, index) => {
