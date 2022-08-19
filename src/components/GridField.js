@@ -9,6 +9,7 @@ import TableCloumn from './TableCloumn';
 var stack = [];
 var queue = [];
 var dfsQueue = [];
+var lastElem = false;
 var run = false;
 
 const GridField = () => {
@@ -19,7 +20,7 @@ const GridField = () => {
 
     const state = useSelector((state) => state);
     const dispatch = useDispatch();
-    const { setNodes } = bindActionCreators(actionCreators, dispatch);
+    const { setNodes, setClickedNodes } = bindActionCreators(actionCreators, dispatch);
 
     const createNodes = () => {
         var nodes = {}
@@ -158,6 +159,9 @@ const GridField = () => {
         }, 200)
     }
 
+    /**
+     * Breitensuche
+     */
     const startBreadthFirstSearch = () => {
         var nodes = state.nodes.nodes;
         queue.push(state.nodes.clickedNodes.startNode);
@@ -191,6 +195,10 @@ const GridField = () => {
         }, 50)
     }
 
+
+    /**
+     * Draw Maze
+     */
     const drawPath = (goalNode) => {
         var nodes = state.nodes.nodes;
         const previous = nodes[goalNode].prev;
@@ -201,11 +209,15 @@ const GridField = () => {
             drawPath(previous);
         }, 100);
     }
-
     const dfsMazeInitialization = () => {
         var nodes = state.nodes.nodes;
+        nodes[state.nodes.clickedNodes.startNode].status = 'unvisit';
+        nodes[state.nodes.clickedNodes.endNode].status = 'unvisit';
         for(let i=1; i<60; i++) {
             for(let j=1; j<24; j++) {
+                if(nodes[`${i}-${j}`].status === 'pathNode') {
+                    nodes[`${i}-${j}`].status = 'unvisit';
+                }
                 if(j % 2 === 0) {
                     nodes[`${i}-${j}`].status = undefined;
                 }
@@ -216,27 +228,36 @@ const GridField = () => {
         }
         setNodes(nodes);
     }
-
-    const dfsMazeDraw = (node) => {
-        if(dfsQueue.length === 0) return;
+    const dfsMazeConvertVisitToNothing = () => {
         var nodes = state.nodes.nodes;
-
+        for(let i=1; i<60; i++) {
+            for(let j=1; j<24; j++) {
+                if(nodes[`${i}-${j}`].status === 'visit') {
+                    nodes[`${i}-${j}`].status = 'unvisit';
+                }
+            }
+        }
+        setNodes(nodes);
+    }
+    const dfsMazeDraw = (node) => {
+        var nodes = state.nodes.nodes;
         nodes[node].status = 'visit';
         const neighbors = checkNeighbors(node);
-        console.log(neighbors);
         const filteredNeighbors = neighbors.filter((el) => {
             if(nodes[el].status !== 'unvisit') return false;
             else return true;
         });
-        console.log(filteredNeighbors);
-        console.log(dfsQueue)
+        if(lastElem && dfsQueue.length === 1) {
+            console.log('Bis hier')
+            dfsMazeConvertVisitToNothing();
+            return;
+        }
         if(filteredNeighbors.length === 0) {
             dfsMazeDraw(dfsQueue.pop());
             return;
         }
-
+        lastElem = true;
         const randomChoice = filteredNeighbors[Math.floor(Math.random() * filteredNeighbors.length)];
-
         if(parseInt(randomChoice.split('-')[0]) === parseInt(node.split('-')[0])) {
             if(parseInt(randomChoice.split('-')[1]) > parseInt(node.split('-')[1])) {
                 nodes[`${parseInt(node.split('-')[0])}-${parseInt(node.split('-')[1]) + 1}`].status = 'visit';
@@ -262,20 +283,22 @@ const GridField = () => {
         setTimeout(() => {
             dfsMazeDraw(dfsQueue.pop());
         }, 50);
-
     }
-
     const dfsMaze = () => {
         dfsMazeInitialization();
+        setClickedNodes({
+            start: true,
+            end: true,
+            startNode: state.nodes.clickedNodes.startNode,
+            endNode: state.nodes.clickedNodes.endNode
+        });
         const start = '1-1';
         dfsQueue.push(start);
         dfsMazeDraw(start);
     }
-
     const checkNeighbors = (elem) => {   
         var x = parseInt(elem.split('-')[0]);
         var y = parseInt(elem.split('-')[1]);
-        
         //top left corner
         if(x === 1 && y === 1) return [`3-1`, `1-3`];
         //top right corner
@@ -284,7 +307,6 @@ const GridField = () => {
         else if(x === 1 && y === 23) return [`1-21`, `3-23`];
         //bottom right corner
         else if(x === 59 && y === 23) return [`57-23`, `59-21`];
-
         //left side
         else if (x === 1) return [`${x}-${y-2}`, `${x}-${y+2}`, `${x+2}-${y}`];
         //right side
@@ -293,7 +315,6 @@ const GridField = () => {
         else if (y === 1) return [`${x-2}-${y}`, `${x+2}-${y}`, `${x}-${y+2}`];
         //bottom side
         else if (y === 23) return [`${x-2}-${y}`, `${x+2}-${y}`, `${x}-${y-2}`];
-
         //mid section
         else return [`${x-2}-${y}`, `${x+2}-${y}`, `${x}-${y-2}`, `${x}-${y+2}`];
     }
